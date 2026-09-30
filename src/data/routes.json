@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "name": "Необычный вечер в центре",
+    "description": "Кофейня с видом на набережную, интерактивный музей и панорама города с высоты. Идеально для дождливого вечера вдвоём.",
+    "duration": "19:00–21:00",
+    "budget": 1500,
+    "points": [
+      { "place_id": 1, "position": 1, "duration": 40, "walk_minutes": 0 },
+      { "place_id": 4, "position": 2, "duration": 45, "walk_minutes": 8 },
+      { "place_id": 10, "position": 3, "duration": 30, "walk_minutes": 7 }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Гастрономический вечер",
+    "description": "Неаполитанская пицца, авторские десерты и кофе с видом на реку. Сытый и неспешный вечер в центре.",
+    "duration": "18:30–21:00",
+    "budget": 2400,
+    "points": [
+      { "place_id": 11, "position": 1, "duration": 45, "walk_minutes": 0 },
+      { "place_id": 19, "position": 2, "duration": 30, "walk_minutes": 10 },
+      { "place_id": 1, "position": 3, "duration": 50, "walk_minutes": 12 }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Культура + прогулка",
+    "description": "Музей истории Томска, выставка современного искусства и вечерняя прогулка по парку с подсветкой.",
+    "duration": "17:00–20:00",
+    "budget": 900,
+    "points": [
+      { "place_id": 4, "position": 1, "duration": 45, "walk_minutes": 0 },
+      { "place_id": 16, "position": 2, "duration": 40, "walk_minutes": 15 },
+      { "place_id": 14, "position": 3, "duration": 70, "walk_minutes": 10 }
+    ]
+  }
+]
