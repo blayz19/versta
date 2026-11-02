@@ -11,7 +11,7 @@ const navItems = [
 ]
 
 export default function Header() {
-  const { user, signOut, isAuthenticated } = useAuth()
+  const { signOut, isAuthenticated } = useAuth()
   const navigate = useNavigate()
 
   return (
@@ -49,7 +49,9 @@ export default function Header() {
             </Link>
           ) : (
             <div className="flex items-center gap-2">
-              <span className="text-xs text-mist-soft/70">{user?.nickname}</span>
+              <Link to="/profile" className="rounded-xl px-4 py-2 text-xs font-medium sm:text-sm transition-all border border-glass text-mist-soft/70 hover:text-brand hover:bg-surface hover:border-brand/40">
+                Профиль
+              </Link>
               <button
                 onClick={() => signOut().then(() => navigate('/'))}
                 className="rounded-xl px-4 py-2 text-xs font-medium sm:text-sm transition-all border border-glass text-mist-soft/70 hover:text-brand hover:bg-surface hover:border-brand/40"

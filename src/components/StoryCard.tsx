@@ -14,6 +14,11 @@ export default function StoryCard({ story }: { story: Story }) {
           className="block h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
           loading="lazy"
           decoding="async"
+          onError={(e) => {
+            const img = e.target as HTMLImageElement
+            img.src = 'https://images.unsplash.com/photo-1492392760666-7f6072e9f855?w=800&q=80'
+            img.alt = story.business_name
+          }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/20 to-transparent" />
         <div className="absolute bottom-4 left-4 right-4">
