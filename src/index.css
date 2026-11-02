@@ -4,7 +4,16 @@
   --color-brand: #4ae89a;
   --color-brand-dim: #254030;
   --color-ink: #0a1810;
+  --color-ink-soft: #122218;
   --color-mist: #e8f5ee;
+  --color-mist-soft: #cde8d8;
+  --color-mist-muted: #8fb09e;
+
+  --color-border: rgba(255, 255, 255, 0.06);
+  --color-border-hover: rgba(74, 232, 154, 0.35);
+  --color-surface: rgba(255, 255, 255, 0.025);
+  --color-surface-hover: rgba(255, 255, 255, 0.05);
+
   --font-sans: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
 }
 
@@ -17,6 +26,7 @@ body {
   color: #f2f7f4;
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection {
@@ -24,11 +34,18 @@ body {
   color: var(--color-ink);
 }
 
-/* Minimal entrance animation for cards */
+/* Glass utilities */
+.glass {
+  background: rgba(18, 34, 24, 0.6);
+  backdrop-filter: blur(20px) saturate(120%);
+  -webkit-backdrop-filter: blur(20px) saturate(120%);
+}
+
+/* Animations */
 @keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(14px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -36,18 +53,95 @@ body {
   }
 }
 
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pulseSoft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
 .animate-rise {
-  animation: rise 0.45s ease both;
+  animation: rise 0.5s ease both;
 }
 
 .animate-rise-1 {
-  animation: rise 0.45s ease 0.05s both;
+  animation: rise 0.5s ease 0.06s both;
 }
 
 .animate-rise-2 {
-  animation: rise 0.45s ease 0.12s both;
+  animation: rise 0.5s ease 0.12s both;
 }
 
 .animate-rise-3 {
-  animation: rise 0.45s ease 0.19s both;
+  animation: rise 0.5s ease 0.18s both;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease both;
+}
+
+.animate-pulse-soft {
+  animation: pulseSoft 3s ease-in-out infinite;
+}
+
+/* Card base */
+.card {
+  @apply overflow-hidden rounded-3xl border border-border bg-surface transition-all duration-300 hover:border-border-hover hover:bg-surface-hover hover:-translate-y-1;
+}
+
+.card-img-wrap {
+  @apply relative overflow-hidden h-48 sm:h-56;
+}
+
+.card-img-wrap img {
+  @apply block h-full w-full object-cover transition-transform duration-700 ease-out;
+}
+
+.card:hover .card-img-wrap img {
+  transform: scale(1.05);
+}
+
+/* Section headings */
+.section-label {
+  @apply text-xs font-medium tracking-wider uppercase text-mist-muted mb-1;
+}
+.section-title {
+  @apply text-3xl font-bold tracking-tight text-mist sm:text-5xl mb-2;
+}
+.section-desc {
+  @apply text-lg text-mist-soft/70 max-w-2xl;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-ink);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-mist-muted);
+}
+
+/* Focus */
+*:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+/* Hide scrollbar for horizontal lists */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

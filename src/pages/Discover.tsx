@@ -27,12 +27,28 @@ const defaultFilters: DiscoverFilters = {
   weather: 'Дождь',
 }
 
+type FilterSection = {
+  key: keyof DiscoverFilters
+  label: string
+  options: string[]
+}
+
+const sections: FilterSection[] = [
+  { key: 'query', label: 'Запрос', options: querySuggestions },
+  { key: 'time', label: 'Время', options: timeOptions },
+  { key: 'budget', label: 'Бюджет', options: budgetOptions },
+  { key: 'company', label: 'Компания', options: companyOptions },
+  { key: 'format', label: 'Формат', options: formatOptions },
+  { key: 'weather', label: 'Погода', options: weatherOptions },
+]
+
 export default function Discover() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const initialQuery = searchParams.get('query') || defaultFilters.query
 
   const [filters, setFilters] = useState<DiscoverFilters>({ ...defaultFilters, query: initialQuery })
+  const [activeSection, setActiveSection] = useState<string>('query')
 
   const update = (key: keyof DiscoverFilters, value: string) =>
     setFilters((f) => ({ ...f, [key]: value }))
@@ -42,82 +58,94 @@ export default function Discover() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
-      <h1 className="text-3xl font-bold tracking-tight text-mist sm:text-4xl">Что тебе нужно?</h1>
-      <p className="mt-2 text-mist/50">Ответь на несколько вопросов — и мы подберём подходящие сценарии.</p>
+    <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
+      <div className="mb-12 sm:mb-16">
+        <h1 className="text-3xl font-bold tracking-tight text-mist sm:text-5xl mb-4">Что тебе нужно?</h1>
+        <p className="text-lg text-mist-soft/70 max-w-xl">
+          Ответь на несколько вопросов — и мы подберем сценарии, которые точно попадают в твои интересы.
+        </p>
+      </div>
 
-      {/* Query */}
-      <section className="mt-10">
-        <label className="text-sm font-medium tracking-wider text-mist/40">ЗАПРОС</label>
-        <input
-          type="text"
-          value={filters.query}
-          onChange={(e) => update('query', e.target.value)}
-          placeholder="Например: «Хочу необычный вечер»"
-          className="mt-3 w-full rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-4 text-lg text-mist placeholder:text-mist/30 outline-none transition-colors focus:border-brand/50"
-        />
-        <div className="mt-3 flex flex-wrap gap-2">
-          {querySuggestions.map((q) => (
-            <FilterChip key={q} label={q} selected={filters.query === q} onClick={() => update('query', q)} />
-          ))}
-        </div>
-      </section>
+      <div className="space-y-6">
+        {sections.map((section) => {
+          const isQuery = section.key === 'query'
+          const isOpen = activeSection === section.key || isQuery
+          return (
+            <section
+              key={section.key}
+              className="rounded-2xl border border-glass bg-surface transition-all duration-300 hover:border-brand/40 hover:bg-surface-hover"
+            >
+              <button
+                onClick={() => setActiveSection(section.key)}
+                className="flex w-full items-center justify-between gap-3 rounded-xl border-b border-glass/50 bg-surface px-5 py-4 sm:px-6 sm:py-5 text-left transition-colors focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-xs font-medium tracking-wider uppercase text-mist-muted/60">
+                    {section.label}
+                  </span>
+                </div>
+                {isQuery && (
+                  <span className="text-sm font-medium text-mist-soft">{filters.query}</span>
+                )}
+                <svg
+                  className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''} text-mist-muted/50`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
 
-      {/* Time */}
-      <section className="mt-8">
-        <label className="text-sm font-medium tracking-wider text-mist/40">ВРЕМЯ</label>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {timeOptions.map((t) => (
-            <FilterChip key={t} label={t} selected={filters.time === t} onClick={() => update('time', t)} />
-          ))}
-        </div>
-      </section>
+              {isOpen && (
+                <div className="border-t border-glass/50 px-5 py-5 sm:px-6 sm:py-6">
+                  {isQuery ? (
+                    <>
+                      <input
+                        type="text"
+                        value={filters.query}
+                        onChange={(e) => update('query', e.target.value)}
+                        placeholder="Например: «Хочу необычный вечер»"
+                        className="mt-3 w-full rounded-xl border border-glass bg-surface-hover px-4 py-3 text-lg text-mist placeholder:text-mist-muted/50 focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-ink transition-colors"
+                      />
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        {querySuggestions.map((q) => (
+                          <FilterChip
+                            key={q}
+                            label={q}
+                            selected={filters.query === q}
+                            onClick={() => update('query', q)}
+                          />
+                        ))}
+                      </div>
+                    </>
+                  ) : (
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {section.options.map((opt) => (
+                        <FilterChip
+                          key={opt}
+                          label={opt}
+                          selected={filters[section.key] === opt}
+                          onClick={() => update(section.key, opt)}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </section>
+          )
+        })}
+      </div>
 
-      {/* Budget */}
-      <section className="mt-8">
-        <label className="text-sm font-medium tracking-wider text-mist/40">БЮДЖЕТ</label>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {budgetOptions.map((b) => (
-            <FilterChip key={b} label={b} selected={filters.budget === b} onClick={() => update('budget', b)} />
-          ))}
-        </div>
-      </section>
-
-      {/* Company */}
-      <section className="mt-8">
-        <label className="text-sm font-medium tracking-wider text-mist/40">КОМПАНИЯ</label>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {companyOptions.map((c) => (
-            <FilterChip key={c} label={c} selected={filters.company === c} onClick={() => update('company', c)} />
-          ))}
-        </div>
-      </section>
-
-      {/* Format */}
-      <section className="mt-8">
-        <label className="text-sm font-medium tracking-wider text-mist/40">ФОРМАТ</label>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {formatOptions.map((f) => (
-            <FilterChip key={f} label={f} selected={filters.format === f} onClick={() => update('format', f)} />
-          ))}
-        </div>
-      </section>
-
-      {/* Weather */}
-      <section className="mt-8">
-        <label className="text-sm font-medium tracking-wider text-mist/40">ПОГОДА</label>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {weatherOptions.map((w) => (
-            <FilterChip key={w} label={w} selected={filters.weather === w} onClick={() => update('weather', w)} />
-          ))}
-        </div>
-      </section>
-
-      {/* Submit */}
-      <div className="mt-12">
+      <div className="mt-12 sm:mt-16 pt-8 border-t border-glass">
         <Button size="lg" className="w-full sm:w-auto" onClick={handleSubmit}>
-          Найти для меня
+          Подобрать сценарии для меня
         </Button>
+        <p className="mt-4 text-xs text-mist-muted/50 text-center">
+          Мы подберем до 3 вариантов под твой запрос, время и бюджет.
+        </p>
       </div>
     </div>
   )

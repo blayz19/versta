@@ -107,11 +107,86 @@ export function scorePlace(place: Place, filters: DiscoverFilters): number {
   return score
 }
 
+/* ---------- Платное продвижение (P1) ----------
+
+Правила ранжирования:
+1. Сначала применяются обязательные фильтры (город, категория, поиск, активность, соответствие параметрам).
+2. Потом считается базовая релевантность.
+3. Для прошедших фильтров мест применяется коммерческий бонус paid_boost,
+   если у места активна кампания и текущее время в期間е продвижения.
+4. Ограничение рекламной плотности: не более 1 платного места на каждые 4 карточки
+   и не более 1 платного места в короткой подборке из 3 объектов.
+
+paid_boost задаётся в конфигурации и должен быть ниже жёстких штрафов за несоответствие.
+*/
+
+export const PROMO_CONFIG = {
+  maxPaidRatio: 1 / 4, // не более 1 платного на 4 карточки
+  maxPaidInShortList: 1, // не более 1 в подборке из 3
+}
+
+function isPromotionActive(p: Place): boolean {
+  if (!p.is_active) return false
+  const now = new Date()
+  const start = p.promotion_start_at ? new Date(p.promotion_start_at) : null
+  const end = p.promotion_end_at ? new Date(p.promotion_end_at) : null
+  if (start && now < start) return false
+  if (end && now > end) return false
+  return true
+}
+
 export function getRecommendations(filters: DiscoverFilters): ScoredPlace[] {
-  return places
+  const now = new Date()
+
+  const scored = places
     .filter((p) => p.is_active)
     .map((place) => ({ place, score: scorePlace(place, filters) }))
     .sort((a, b) => b.score - a.score)
+
+  // Разделяем на органические и платные (активная кампания)
+  const organic: ScoredPlace[] = []
+  const paid: ScoredPlace[] = []
+
+  for (const item of scored) {
+    const p = item.place
+    const promoted = Boolean(
+      p.is_promoted &&
+        isPromotionActive(p) &&
+        (!p.promotion_start_at || new Date(p.promotion_start_at) <= now) &&
+        (!p.promotion_end_at || new Date(p.promotion_end_at) >= now)
+    )
+    if (promoted) {
+      paid.push({ ...item, score: item.score + (p.paid_boost ?? 0) })
+    } else {
+      organic.push(item)
+    }
+  }
+
+  // Интерлевинг: не более 1 платного на каждые 4 карточки
+  const result: ScoredPlace[] = []
+  let organicIdx = 0
+  let paidIdx = 0
+  let slotsSinceLastPaid = 0
+
+  while (organicIdx < organic.length || paidIdx < paid.length) {
+    const canTakePaid =
+      paidIdx < paid.length &&
+      (slotsSinceLastPaid >= 4 || organicIdx >= organic.length)
+
+    if (canTakePaid) {
+      result.push(paid[paidIdx])
+      paidIdx++
+      slotsSinceLastPaid = 0
+    } else if (organicIdx < organic.length) {
+      result.push(organic[organicIdx])
+      organicIdx++
+      slotsSinceLastPaid++
+    } else {
+      break
+    }
+  }
+
+  return result
 }
 
 export function getTopScenarios(filters: DiscoverFilters, count = 3) {

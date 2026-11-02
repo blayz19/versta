@@ -1,38 +1,38 @@
 [
   {
     "id": 1,
-    "name": "Необычный вечер в центре",
-    "description": "Кофейня с видом на набережную, интерактивный музей и панорама города с высоты. Идеально для дождливого вечера вдвоём.",
-    "duration": "19:00–21:00",
-    "budget": 1500,
+    "name": "Развлечения и VR в центре",
+    "description": "MATRIX VR CLUB, Городской сад и прогулка по Набережной реки Томь. Яркий день для компании или семьи.",
+    "duration": "12:00–18:00",
+    "budget": 2000,
     "points": [
-      { "place_id": 1, "position": 1, "duration": 40, "walk_minutes": 0 },
-      { "place_id": 4, "position": 2, "duration": 45, "walk_minutes": 8 },
-      { "place_id": 10, "position": 3, "duration": 30, "walk_minutes": 7 }
+      { "place_id": 1, "position": 1, "duration": 60, "walk_minutes": 0 },
+      { "place_id": 4, "position": 2, "duration": 60, "walk_minutes": 15 },
+      { "place_id": 19, "position": 3, "duration": 30, "walk_minutes": 10 }
     ]
   },
   {
     "id": 2,
     "name": "Гастрономический вечер",
-    "description": "Неаполитанская пицца, авторские десерты и кофе с видом на реку. Сытый и неспешный вечер в центре.",
-    "duration": "18:30–21:00",
-    "budget": 2400,
+    "description": "Трактир «Вечный Зов», бургерная #Re:Bro и визит в MATRIX VR CLUB. Вкусно и интересно.",
+    "duration": "18:00–23:00",
+    "budget": 2500,
     "points": [
-      { "place_id": 11, "position": 1, "duration": 45, "walk_minutes": 0 },
-      { "place_id": 19, "position": 2, "duration": 30, "walk_minutes": 10 },
+      { "place_id": 6, "position": 1, "duration": 60, "walk_minutes": 0 },
+      { "place_id": 15, "position": 2, "duration": 40, "walk_minutes": 10 },
       { "place_id": 1, "position": 3, "duration": 50, "walk_minutes": 12 }
     ]
   },
   {
     "id": 3,
-    "name": "Культура + прогулка",
-    "description": "Музей истории Томска, выставка современного искусства и вечерняя прогулка по парку с подсветкой.",
-    "duration": "17:00–20:00",
-    "budget": 900,
+    "name": "Культура и история Томска",
+    "description": "Музей истории Томска, Дом с шатром и краеведческий музей им. Шатилова. Погружение в прошлое города.",
+    "duration": "10:00–17:00",
+    "budget": 800,
     "points": [
-      { "place_id": 4, "position": 1, "duration": 45, "walk_minutes": 0 },
-      { "place_id": 16, "position": 2, "duration": 40, "walk_minutes": 15 },
-      { "place_id": 14, "position": 3, "duration": 70, "walk_minutes": 10 }
+      { "place_id": 11, "position": 1, "duration": 45, "walk_minutes": 0 },
+      { "place_id": 12, "position": 2, "duration": 40, "walk_minutes": 20 },
+      { "place_id": 16, "position": 3, "duration": 60, "walk_minutes": 10 }
     ]
   }
 ]

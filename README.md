@@ -1,32 +1,56 @@
-# React + TypeScript + Vite
+# Верста — локальный дисковери для Томска
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Веб-сервис для поиска мест и идей, чем заняться в Томске. Подбор сценариев под интересы, карта мест, социальные метки, челленджи, геймификация посещений.
 
-Currently, two official plugins are available:
+## Стек
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Frontend: React 19 + TypeScript + Vite
+- Карта: Leaflet + OpenStreetMap + Яндекс Карты (виджет)
+- Бэкенд (опционально): Supabase (Auth, PostgreSQL)
+- Сборка: Vite
 
-## React Compiler
+## Локальный запуск
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+# Установить зависимости
+npm install
 
-## Expanding the Oxlint configuration
+# Переменные окружения (опционально, для Supabase)
+cp .env.example .env
+# Заполните VITE_SUPABASE_URL и VITE_SUPABASE_ANON_KEY в .env
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+# Запуск в режиме разработки
+npm run dev
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+# Сборка для продакшена
+npm run build
+
+# Предпросмотр сборки
+npm run preview
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Приложение запустится на `http://localhost:5173/`.
+
+## Структура
+
+- `src/pages/` — страницы приложения
+- `src/components/` — переиспользуемые компоненты
+- `src/hooks/` — логика (места, пользователь, метки, челленджи, рекомендации)
+- `src/data/` — данные о местах, сценариях и маршрутах (JSON)
+- `src/lib/supabase.ts` — клиент Supabase
+
+## Данные
+
+Места загружаются из `src/data/places.json` (20 реальных объектов Томска с адресами и координатами). Если настроен Supabase, данные загружаются из базы.
+
+## Деплой
+
+Любая платформа со статическим хостингом (Vercel, Netlify, Timeweb, relaxdev и др.):
+1. Подключите репозиторий GitHub
+2. Команда сборки: `npm run build`
+3. Директория сборки: `dist`
+4. Добавьте переменные `VITE_SUPABASE_URL` и `VITE_SUPABASE_ANON_KEY` в настройках хостинга (если используете Supabase)
+
+## Лицензия
+
+MIT
